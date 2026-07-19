@@ -16,4 +16,4 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Whitenoise serves collected static files in production. Override just the
 # "staticfiles" backend here rather than setting the legacy STATICFILES_STORAGE
 # setting, which Django 5 forbids combining with the STORAGES dict in base.py.
-STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES["staticfiles"]["BACKEND"] = "apps.core.storage.LenientManifestStaticFilesStorage"
