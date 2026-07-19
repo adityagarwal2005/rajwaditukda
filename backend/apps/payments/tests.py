@@ -53,3 +53,23 @@ class PaymentTests(APITestCase):
 
         self.order.refresh_from_db()
         self.assertEqual(self.order.status, "confirmed")
+
+    def test_marking_payment_successful_confirms_whatsapp_order(self):
+        """
+        WhatsApp-checkout orders start with no address and status
+        'awaiting_details' - once staff fill in the address (given in chat)
+        and mark the payment successful, the same signal should confirm it.
+        """
+        wa_order = Order.objects.create(
+            user=self.user, address=None, status="awaiting_details",
+            subtotal_amount=300, total_amount=300,
+        )
+        wa_order.address = self.address
+        wa_order.save(update_fields=["address"])
+
+        payment = Payment.objects.create(order=wa_order, gateway="manual", amount=wa_order.total_amount)
+        payment.status = PaymentStatus.SUCCESS
+        payment.save()
+
+        wa_order.refresh_from_db()
+        self.assertEqual(wa_order.status, "confirmed")

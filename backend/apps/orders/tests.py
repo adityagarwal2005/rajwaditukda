@@ -87,3 +87,26 @@ class CartAndCheckoutTests(APITestCase):
 
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock_quantity, 5)
+
+    def test_whatsapp_checkout_creates_order_without_address(self):
+        self.client.post(reverse("cart-item-list"), {"product_id": self.product.id, "quantity": 1})
+        response = self.client.post(reverse("order-checkout-whatsapp"), {"notes": "call me"})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = response.data["data"]
+        self.assertEqual(data["status"], "awaiting_details")
+        self.assertIsNone(data["address"])
+
+    def test_whatsapp_checkout_decrements_stock_and_clears_cart(self):
+        self.client.post(reverse("cart-item-list"), {"product_id": self.product.id, "quantity": 2})
+        response = self.client.post(reverse("order-checkout-whatsapp"))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.stock_quantity, 3)
+
+        cart_response = self.client.get(reverse("cart-detail"))
+        self.assertEqual(len(cart_response.data["data"]["items"]), 0)
+
+    def test_whatsapp_checkout_fails_with_empty_cart(self):
+        response = self.client.post(reverse("order-checkout-whatsapp"))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
