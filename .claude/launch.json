@@ -1,0 +1,53 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd backend && venv/bin/python manage.py runserver 8001"],
+      "port": 8001
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd frontend && npm run dev"],
+      "port": 5173
+    },
+    {
+      "name": "ph-complete-frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/adityaagarwal/Downloads/ph_complete/frontend' && npm run dev -- --port 5174"],
+      "port": 5174
+    },
+    {
+      "name": "ph-complete-backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/adityaagarwal/Downloads/ph_complete/backend' && venv/bin/uvicorn main:app --port 8001"],
+      "port": 8001
+    },
+    {
+      "name": "skillmap-frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/adityaagarwal/Documents/sm/frontend && BROWSER=none PORT=3000 DISABLE_ESLINT_PLUGIN=true npm start"],
+      "port": 3000
+    },
+    {
+      "name": "skillmap-backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/adityaagarwal/Documents/sm/social && DEBUG=True DJANGO_SETTINGS_MODULE=social.local_test_settings venv/bin/python manage.py runserver 8000 --noreload"],
+      "port": 8000
+    },
+    {
+      "name": "cufr-backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/adityaagarwal/Downloads/cu_fr/backend' && venv/bin/python manage.py runserver 8000"],
+      "port": 8000
+    },
+    {
+      "name": "cufr-frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/adityaagarwal/Downloads/cu_fr/frontend' && python3 -m http.server 5500"],
+      "port": 5500
+    }
+  ]
+}
