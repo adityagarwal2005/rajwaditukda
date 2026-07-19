@@ -208,3 +208,20 @@ PAYMENT_BANK_IFSC = env("PAYMENT_BANK_IFSC", default="XXXX0000000")
 PAYMENT_BANK_NAME = env("PAYMENT_BANK_NAME", default="Your Bank Name")
 # WhatsApp checkout: full number with country code, no '+' or spaces (e.g. 919999999999).
 PAYMENT_WHATSAPP_NUMBER = env("PAYMENT_WHATSAPP_NUMBER", default="910000000000")
+
+# --- Logging ---
+# Without this, Django's default logging only emails unhandled 500s to
+# ADMINS (unset here) and prints nothing to console - so on a platform like
+# Render, which captures stdout/stderr as its log stream, request tracebacks
+# would otherwise vanish with no way to see what actually broke.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "INFO"},
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+    },
+}
