@@ -1,14 +1,19 @@
-import type { CartItem } from '@/types/order'
 import { formatCurrency } from '@/utils/formatCurrency'
+
+interface OrderLineItem {
+  product_name: string
+  quantity: number
+}
 
 /**
  * Builds a wa.me deep link with the order pre-filled in the message text,
  * so the customer doesn't have to retype their cart when they land in chat.
+ * Accepts both CartItem[] and OrderItem[] - only product_name/quantity are used.
  */
 export function buildWhatsAppOrderUrl(
   whatsappNumber: string,
   orderId: string,
-  items: CartItem[],
+  items: OrderLineItem[],
   totalAmount: string,
 ): string {
   const lines = [
