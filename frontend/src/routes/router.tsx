@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter } from 'react-router-dom'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { ProtectedRoute } from '@/components/common/ProtectedRoute'
 import { GuestRoute } from '@/components/common/GuestRoute'
@@ -43,7 +43,12 @@ const NotFoundPage = lazy(() =>
   import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })),
 )
 
-export const router = createBrowserRouter([
+// Hash-based routing (URLs like /#/products/foo): Render's static-site rewrite
+// rule for SPA fallback (`/*` -> `/index.html`) doesn't serve real content on
+// this deployment despite matching their documented config exactly - every
+// request under a hash always resolves to `/` server-side, so this sidesteps
+// that entirely regardless of what's wrong on Render's end.
+export const router = createHashRouter([
   {
     element: <MainLayout />,
     children: [
