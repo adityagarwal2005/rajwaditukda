@@ -9,6 +9,12 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings.production
+      # Django 5.0 only officially supports Python up to 3.12 - without this,
+      # Render defaults to its latest Python (3.14 as of writing), which broke
+      # admin's template/form rendering (DRF's simpler JSON views happened to
+      # still work, masking the mismatch until /admin/login/ was hit).
+      - key: PYTHON_VERSION
+        value: "3.12.7"
       - key: SECRET_KEY
         generateValue: true
       - key: ALLOWED_HOSTS
