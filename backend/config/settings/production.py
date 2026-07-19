@@ -16,4 +16,13 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Whitenoise serves collected static files in production. Override just the
 # "staticfiles" backend here rather than setting the legacy STATICFILES_STORAGE
 # setting, which Django 5 forbids combining with the STORAGES dict in base.py.
-STORAGES["staticfiles"]["BACKEND"] = "apps.core.storage.LenientManifestStaticFilesStorage"
+#
+# Deliberately NOT using a Manifest-based storage (hashed, cache-busted
+# filenames): on Render, collectstatic's manifest ended up referencing hashed
+# filenames that didn't match what was actually written to disk (a known
+# fragile interaction between Django's multi-pass CSS url() rewriting and
+# whitenoise's compression pass), 404ing every admin asset. Plain compressed
+# storage skips the hashing step entirely - static files change rarely enough
+# here that losing cache-busting is a non-issue, and it removes this whole
+# class of bug.
+STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedStaticFilesStorage"
